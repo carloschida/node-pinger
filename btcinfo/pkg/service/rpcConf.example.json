@@ -1,5 +1,0 @@
-{
-  "host": "Your RPC host with port, eg 192.168.1.9:8332",
-  "user": "The user in that RPC host",
-  "pass": "The corresponding password"
-}

@@ -2,11 +2,12 @@ package service
 
 import (
 	"context"
+	"errors"
+	"os"
 
 	"github.com/btcsuite/btcd/btcjson"
 	"github.com/btcsuite/btcd/chaincfg/chainhash"
 	"github.com/btcsuite/btcd/rpcclient"
-	"github.com/tkanos/gonfig"
 )
 
 type Service interface {
@@ -40,18 +41,28 @@ func NewService() Service {
  * Business Logic
  */
 
-// TODO Move config to a suitable place and make singleton
-
 type rpcConf struct {
 	Host string `env:"RPC_HOST"`
 	User string `env:"RPC_USER"`
 	Pass string `env:"RPC_PASS"`
 }
 
+func getConfFromEnv() (rpcConf, error) {
+	host := os.Getenv("RPC_HOST")
+	user := os.Getenv("RPC_USER")
+	pass := os.Getenv("RPC_PASS")
+	if host == "" || user == "" || pass == "" {
+		return rpcConf{}, errors.New("missing an ENV: RPC_{HOST,USER,PASS}")
+	}
+	return rpcConf{
+		Host: host,
+		User: user,
+		Pass: pass,
+	}, nil
+}
+
 func getLatestBlock() (uint, error) {
-	// Retrieve local conf from file
-	conf := rpcConf{}
-	err := gonfig.GetConf("./rpcConf.json", &conf)
+	conf, err := getConfFromEnv()
 	if err != nil {
 		panic(err)
 	}
@@ -82,9 +93,7 @@ func getLatestBlock() (uint, error) {
 }
 
 func getTxsFromBlockHash(blockHash string) (*btcjson.GetBlockVerboseResult, error) {
-	// Retrieve local conf from file
-	conf := rpcConf{}
-	err := gonfig.GetConf("./rpcConf.json", &conf)
+	conf, err := getConfFromEnv()
 	if err != nil {
 		panic(err)
 	}

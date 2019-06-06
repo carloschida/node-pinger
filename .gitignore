@@ -1,6 +1,25 @@
+### macOs ###
+.DS_Store
+.DS_Store?
+*._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+### Logs ###
+*.log
+
 ### Intellij ###
 .idea/
 
 ### Conf files ###
-# Local conf file to connect to RPC
-btcinfo/pkg/service/rpcConf.json
+# Local Supervisord
+btcinfo/supervisord.conf
+
+# Local btcinfo for Supervisord
+btcinfo/btcinfo.conf
+
+### Binaries ###
+# btcinfo
+btcinfo/bin/
